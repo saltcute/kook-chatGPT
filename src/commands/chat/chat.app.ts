@@ -12,7 +12,15 @@ class Chat extends AppCommand {
         if (session.args.length == 0) {
             return session.reply("No input");
         } else {
-            conv.run(session);
+            try {
+                conv.run(session);
+            } catch (err) {
+                session.replyCard(new Card().setSize("lg").setTheme("danger")
+                    .addTitle("Internal Error | 内部错误")
+                    .addDivider()
+                    .addText(`错误信息：\n\`\`\`\n${err}\n\`\`\``)
+                )
+            }
         }
     };
 }
