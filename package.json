@@ -1,7 +1,7 @@
 {
-  "name": "kbotify-template",
-  "version": "0.0.1",
-  "description": "Starter kit for kBotify bots",
+  "name": "kook-chatgpt",
+  "version": "0.1.0",
+  "description": "Chat with chatGPT",
   "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,12 +16,12 @@
     "kaiheila",
     "bot"
   ],
-  "author": "FlappyIce",
+  "author": "Hexona",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fi6/kbotify-template/issues"
+    "url": "https://github.com/Hexona69/kook-chatGPT/issues"
   },
-  "homepage": "https://github.com/fi6/kbotify-template#readme",
+  "homepage": "https://github.com/Hexona69/kook-chatGPT#readme",
   "dependencies": {
     "chatgpt": "^2.0.5",
     "kbotify": "^0.2.5",
