@@ -21,7 +21,7 @@ export function refreshToken() {
         const chatgpt = new val.ChatGPTAPI({
             sessionToken: auth.openAIKey
         });
-        await chatgpt.ensureAuth();
+        chatgpt.ensureAuth();
     })`);
     } catch (err) {
         bot.logger.error(err);
