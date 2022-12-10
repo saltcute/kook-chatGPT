@@ -1,13 +1,12 @@
+import { reset } from 'commands/chat/reset.app';
 import { bot } from 'init/client';
-import { echoMenu } from './commands/echo/echo.menu';
+import { chat } from './commands/chat/chat.app';
 
-bot.messageSource.on('message', (e) => {
-    bot.logger.debug(`received:`, e);
-    // 如果想要在console里查看收到信息也可以用
-    //console.log(e);
-});
-
-bot.addCommands(echoMenu);
+bot.logger.fields.name = "kook-chatGPT";
+bot.logger.addStream({ level: bot.logger.INFO, stream: process.stdout });
+// bot.logger.addStream({ level: bot.logger.DEBUG, stream: process.stdout }); // DEBUG
+bot.logger.info("Initialization: kook-chatGPT initialization start");
+bot.addCommands(chat, reset);
 
 bot.connect();
 

@@ -3,7 +3,34 @@
         // these options are overrides used only by ts-node
         // same as our --compilerOptions flag and our TS_NODE_COMPILER_OPTIONS environment variable
         "compilerOptions": {
-            "module": "commonjs"
+            "declaration": true,
+            "emitDecoratorMetadata": true,
+            "experimentalDecorators": true,
+            "target": "es2020",
+            "module": "CommonJS",
+            "moduleResolution": "node",
+            "lib": [
+                "es2020"
+            ],
+            "baseUrl": "./src",
+            "rootDirs": [
+                "src"
+            ],
+            "outDir": "./dist",
+            // "outFile": "./dist/kbotify.js",
+            "strict": true,
+            "typeRoots": [
+                "./typings",
+                "node_modules/@types"
+            ],
+            // "paths": {
+            //     "kaiheila-bot-root": ["node_modules/kaiheila-bot-root"],
+            //     "kaiheila-bot-root/*": ["node_modules/kaiheila-bot-root/*"]
+            // },
+            "esModuleInterop": true,
+            "sourceMap": true,
+            "skipLibCheck": true,
+            "forceConsistentCasingInFileNames": true
         }
     },
     "compilerOptions": {
@@ -13,13 +40,20 @@
         "target": "es2020",
         "module": "commonjs",
         "moduleResolution": "node",
-        "lib": ["es2020"],
+        "lib": [
+            "es2020"
+        ],
         "baseUrl": "./src",
-        "rootDirs": ["src"],
+        "rootDirs": [
+            "src"
+        ],
         "outDir": "./dist",
         // "outFile": "./dist/kbotify.js",
         "strict": true,
-        "typeRoots": ["./typings", "node_modules/@types"],
+        "typeRoots": [
+            "./typings",
+            "node_modules/@types"
+        ],
         // "paths": {
         //     "kaiheila-bot-root": ["node_modules/kaiheila-bot-root"],
         //     "kaiheila-bot-root/*": ["node_modules/kaiheila-bot-root/*"]
@@ -36,5 +70,7 @@
         "./src/**/*.ts",
         ".eslintrc.js",
     ],
-    "exclude": ["./src/tests/*.ts"]
+    "exclude": [
+        "./src/tests/*.ts"
+    ]
 }
