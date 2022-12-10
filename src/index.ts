@@ -9,6 +9,7 @@ bot.logger.addStream({ level: bot.logger.INFO, stream: process.stdout });
 bot.logger.info("Initialization: kook-chatGPT initialization start");
 bot.addCommands(chat, reset);
 
+refreshToken();
 setInterval(refreshToken, 30 * 60 * 1000);
 
 bot.connect();
