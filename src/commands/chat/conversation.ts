@@ -17,12 +17,15 @@ export function resetConversation(channel: string, user: string, conversation: a
 
 export function refreshToken() {
     try {
-        eval(`import("chatgpt").then((val) => {
-        const chatgpt = new val.ChatGPTAPI({
-            sessionToken: auth.openAIKey
-        });
-        chatgpt.ensureAuth();
-    })`);
+        const action = async (val: any) => {
+            const chatgpt = new val.ChatGPTAPI({
+                sessionToken: auth.openAIKey
+            });
+            await chatgpt.ensureAuth();
+        }
+        eval(`
+        import("chatgpt").then(action);
+        `);
     } catch (err) {
         bot.logger.error(err);
     }
