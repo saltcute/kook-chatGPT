@@ -76,7 +76,17 @@ export function run(session: BaseSession): void {
             });
             var string = "";
             var lastUpdate = 0;
-            await chatgpt.ensureAuth();
+            try {
+                await chatgpt.ensureAuth();
+            } catch (err) {
+                bot.logger.error(err);
+                session.replyCard(new Card().setSize("lg").setTheme("danger")
+                    .addTitle("Internal Error | 内部错误")
+                    .addDivider()
+                    .addText(`错误信息：\n\`\`\`\n${err}\n\`\`\``)
+                )
+                return;
+            }
             if (!getConversation(session.channel.id, session.user.id)) {
                 resetConversation(session.channel.id, session.user.id, chatgpt.getConversation());
             }
