@@ -80,7 +80,7 @@ export function run(session: BaseSession): void {
                 await chatgpt.ensureAuth();
             } catch (err) {
                 bot.logger.error(err);
-                session.replyCard(new Card().setSize("lg").setTheme("danger")
+                session.sendCard(new Card().setSize("lg").setTheme("danger")
                     .addTitle("Internal Error | 内部错误")
                     .addDivider()
                     .addText(`错误信息：\n\`\`\`\n${err}\n\`\`\``)
@@ -107,7 +107,7 @@ export function run(session: BaseSession): void {
                 setTimeout(() => { bot.API.message.update(messageId, getCard(string, false).toString()); }, 1000);
             }).catch((err: any) => {
                 bot.logger.error(err);
-                session.replyCard(new Card().setSize("lg").setTheme("danger")
+                session.sendCard(new Card().setSize("lg").setTheme("danger")
                     .addTitle("Internal Error | 内部错误")
                     .addDivider()
                     .addText(`错误信息：\n\`\`\`\n${err}\n\`\`\``)
@@ -116,7 +116,7 @@ export function run(session: BaseSession): void {
         }
         eval(`import("chatgpt").then(action)`);
     } catch (err) {
-        session.replyCard(new Card().setSize("lg").setTheme("danger")
+        session.sendCard(new Card().setSize("lg").setTheme("danger")
             .addTitle("Internal Error | 内部错误")
             .addDivider()
             .addText(`错误信息：\n\`\`\`\n${err}\n\`\`\``)
