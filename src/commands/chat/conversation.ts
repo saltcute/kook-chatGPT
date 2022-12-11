@@ -95,7 +95,7 @@ export function run(session: BaseSession): void {
                     string = res;
                     if (Math.trunc(Date.now() / 400) != lastUpdate) {
                         bot.API.message.update(messageId, getCard(string, true).toString()).catch((err) => {
-                            console.log(getCard(string, true));
+                            console.log(getCard(string, true).toString());
                             bot.logger.error(err);
                         });
                         lastUpdate = Math.trunc(Date.now() / 400);
@@ -105,6 +105,13 @@ export function run(session: BaseSession): void {
             }).then(() => {
                 bot.logger.info("Done");
                 setTimeout(() => { bot.API.message.update(messageId, getCard(string, false).toString()); }, 1000);
+            }).catch((err: any) => {
+                bot.logger.error(err);
+                session.replyCard(new Card().setSize("lg").setTheme("danger")
+                    .addTitle("Internal Error | 内部错误")
+                    .addDivider()
+                    .addText(`错误信息：\n\`\`\`\n${err}\n\`\`\``)
+                );
             })
         }
         eval(`import("chatgpt").then(action)`);
