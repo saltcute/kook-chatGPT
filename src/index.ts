@@ -1,4 +1,4 @@
-import { refreshToken } from 'commands/chat/conversation';
+import * as conv from 'commands/chat/conversation';
 import { reset } from 'commands/chat/reset.app';
 import { bot } from 'init/client';
 import { chat } from './commands/chat/chat.app';
@@ -9,8 +9,8 @@ bot.logger.addStream({ level: bot.logger.INFO, stream: process.stdout });
 bot.logger.info("Initialization: kook-chatGPT initialization start");
 bot.addCommands(chat, reset);
 
-refreshToken();
-setInterval(refreshToken, 5 * 60 * 1000);
+conv.run("refresh")
+setInterval(() => { conv.run("refresh") }, 1 * 60 * 1000);
 
 bot.connect();
 

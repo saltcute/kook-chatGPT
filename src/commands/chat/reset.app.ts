@@ -11,11 +11,7 @@ class Reset extends AppCommand {
     func: AppFunc<BaseSession> = async (session) => {
         bot.logger.info(`Invoked .reset  ${session.args.join(" ")}`);
         const action = async (val: any) => {
-            const chatgpt = new val.ChatGPTAPI({
-                sessionToken: auth.openAIKey
-            });
-            await chatgpt.ensureAuth();
-            conv.resetConversation(session.channel.id, session.user.id, chatgpt.getConversation());
+            conv.run("reset", session.channel.id, session.user.id);
         }
         eval(`import("chatgpt").then(action)`);
         return session.reply("Session refreshed");
