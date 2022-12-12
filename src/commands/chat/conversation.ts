@@ -93,6 +93,13 @@ export async function run(action: "get" | "reset" | "run" | "refresh" | "addPref
             }).then((res) => {
                 bot.logger.info("Done");
                 setTimeout(() => { bot.API.message.update(messageId, getCard(res, false).toString()); }, 1000);
+            }).catch((err) => {
+                session.replyCard(new Card().setSize("lg").setTheme("danger")
+                    .addTitle("Internal Error | 内部错误")
+                    .addDivider()
+                    .addText(`错误信息：\n\`\`\`\n${err}\n\`\`\``)
+                )
+                bot.logger.error(err);
             })
         })
     }
