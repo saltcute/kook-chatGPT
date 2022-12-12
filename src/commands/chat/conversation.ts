@@ -6,7 +6,8 @@ export async function run(action: "get" | "reset" | "run" | "refresh", ...args: 
     const chatGPTAPI = await import("chatgpt");
     const chatgpt = new chatGPTAPI.ChatGPTAPI({
         sessionToken: auth.openAIKey,
-        clearanceToken: auth.cfToken
+        clearanceToken: auth.cfToken,
+        userAgent: auth.userAgent
     });
 
     var conversations: {

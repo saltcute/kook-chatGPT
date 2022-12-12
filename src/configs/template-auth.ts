@@ -5,5 +5,6 @@ export default {
     khltoken: 'token here',
     khlverify: 'verify token here',
     openAIKey: 'key here',
-    cfToken: 'token here'
+    cfToken: 'token here',
+    userAgent: 'ua'
 };
