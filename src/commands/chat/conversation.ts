@@ -1,6 +1,7 @@
 import auth from "configs/auth";
 import { bot } from "init/client";
 import { BaseSession, Card } from "kbotify";
+import { getOpenAIAuthInfo } from "./openAILogin";
 
 var prefix: {
     [user: string]: string
@@ -12,13 +13,41 @@ var conversations: {
     }
 } = {};
 
+type openAIAuthInfo = {
+    userAgent: string
+    clearanceToken: string
+    sessionToken: string
+}
+
+
+
+var info: any = {};
+var lastUpdate: number = -1;
+
 export async function run(action: "get" | "reset" | "run" | "refresh" | "addPrefix", ...args: any): Promise<any> {
     const chatGPTAPI = await import("chatgpt");
-    const chatgpt = new chatGPTAPI.ChatGPTAPI({
-        sessionToken: auth.openAIKey,
-        clearanceToken: auth.cfToken,
+    var openAIAuth: openAIAuthInfo = {
+        sessionToken: auth.sessionToken,
+        clearanceToken: auth.cfClearance,
         userAgent: auth.userAgent
-    });
+    }
+    if (Date.now() - lastUpdate > 60 * 60 * 1000) {
+        if (auth.autoLogin) {
+            try {
+                openAIAuth = await getOpenAIAuthInfo({
+                    email: auth.openAIEmail,
+                    password: auth.openAIPassword
+                })
+            } catch (err) {
+                bot.logger.error(err);
+            }
+        }
+        info = openAIAuth;
+        lastUpdate = Date.now();
+    }
+    console.log(info);
+    console.log(lastUpdate);
+    const chatgpt = new chatGPTAPI.ChatGPTAPI(info);
     async function getConversation(channel: string, user: string): Promise<ReturnType<typeof chatgpt.getConversation>> {
         if (!conversations[channel] || !conversations[channel][user]) {
             await resetConversation(channel, user);

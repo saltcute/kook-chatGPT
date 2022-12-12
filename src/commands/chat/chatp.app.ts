@@ -9,7 +9,7 @@ class ChatWithPrefix extends AppCommand {
     intro = '复读你所说的文字, 并用kmarkdown格式返回。';
     func: AppFunc<BaseSession> = async (session) => {
         bot.logger.info(`Invoked .chatp ${session.args.join(" ")}`);
-        conv.run("run", session, true).catch((err) => {
+        await conv.run("run", session, true).catch((err) => {
             session.replyCard(new Card().setSize("lg").setTheme("danger")
                 .addTitle("Internal Error | 内部错误")
                 .addDivider()

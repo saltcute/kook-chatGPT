@@ -4,7 +4,11 @@ export default {
     khlkey: 'encrypt key here',
     khltoken: 'token here',
     khlverify: 'verify token here',
-    openAIKey: 'key here',
-    cfToken: 'token here',
-    userAgent: 'ua'
+
+    sessionToken: '',
+    cfClearance: '',
+    userAgent: '',
+    autoLogin: false,
+    openAIEmail: '',
+    openAIPassword: ''
 };

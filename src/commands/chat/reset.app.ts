@@ -10,7 +10,7 @@ class Reset extends AppCommand {
     intro = '复读你所说的文字, 并用kmarkdown格式返回。';
     func: AppFunc<BaseSession> = async (session) => {
         bot.logger.info(`Invoked .reset  ${session.args.join(" ")}`);
-        conv.run("reset", session.channel.id, session.user.id);
+        await conv.run("reset", session.channel.id, session.user.id);
         return session.reply("Session refreshed");
     };
 }

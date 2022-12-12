@@ -23,9 +23,13 @@
   },
   "homepage": "https://github.com/Hexona69/kook-chatGPT#readme",
   "dependencies": {
-    "chatgpt": "^2.1.0",
+    "chatgpt": "^2.2.0",
+    "delay": "^5.0.0",
     "kbotify": "^0.2.5",
     "openai": "^3.1.0",
+    "puppeteer": "^19.4.0",
+    "puppeteer-extra": "^3.3.4",
+    "puppeteer-extra-plugin-stealth": "^2.11.1",
     "ts-node": "^10.9.1",
     "ts-register": "^0.1.0"
   },
