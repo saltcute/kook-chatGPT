@@ -95,6 +95,8 @@ export async function getOpenAIAuthInfo({
         console.log(authInfo);
         lastUpdate = Date.now();
         auth = authInfo;
+
+        await browser.close();
         return authInfo
     } catch (err) {
         bot.logger.error(err);
