@@ -21,8 +21,6 @@ type openAIAuthInfo = {
 
 
 
-var info: any = {};
-var lastUpdate: number = -1;
 
 export async function run(action: "get" | "reset" | "run" | "refresh" | "addPrefix", ...args: any): Promise<any> {
     const chatGPTAPI = await import("chatgpt");
@@ -31,23 +29,17 @@ export async function run(action: "get" | "reset" | "run" | "refresh" | "addPref
         clearanceToken: auth.cfClearance,
         userAgent: auth.userAgent
     }
-    if (Date.now() - lastUpdate > 60 * 60 * 1000) {
-        if (auth.autoLogin) {
-            try {
-                openAIAuth = await getOpenAIAuthInfo({
-                    email: auth.openAIEmail,
-                    password: auth.openAIPassword
-                })
-            } catch (err) {
-                bot.logger.error(err);
-            }
+    if (auth.autoLogin) {
+        try {
+            openAIAuth = await getOpenAIAuthInfo({
+                email: auth.openAIEmail,
+                password: auth.openAIPassword
+            })
+        } catch (err) {
+            bot.logger.error(err);
         }
-        info = openAIAuth;
-        lastUpdate = Date.now();
     }
-    console.log(info);
-    console.log(lastUpdate);
-    const chatgpt = new chatGPTAPI.ChatGPTAPI(info);
+    const chatgpt = new chatGPTAPI.ChatGPTAPI(openAIAuth);
     async function getConversation(channel: string, user: string): Promise<ReturnType<typeof chatgpt.getConversation>> {
         if (!conversations[channel] || !conversations[channel][user]) {
             await resetConversation(channel, user);

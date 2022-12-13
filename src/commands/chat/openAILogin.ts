@@ -18,6 +18,8 @@ export type OpenAIAuthInfo = {
     cookies?: Record<string, Protocol.Network.Cookie>
 }
 
+var auth: OpenAIAuthInfo;
+var lastUpdate: number = -1;
 /**
  * Bypasses OpenAI's use of Cloudflare to get the cookies required to use
  * ChatGPT. Uses Puppeteer with a stealth plugin under the hood.
@@ -36,6 +38,9 @@ export async function getOpenAIAuthInfo({
     let page: Page
     let origBrowser = browser
 
+    if (auth && (Date.now() - lastUpdate < 60 * 60 * 1000)) {
+        return auth;
+    }
     try {
         if (!browser) {
             browser = await getBrowser()
@@ -74,7 +79,7 @@ export async function getOpenAIAuthInfo({
             // console.log("Probably logged in for google")
             // await page.click(`div[data-email="${email}"]`)
         }
-        await page.waitForSelector("items-center");
+        await page.waitForSelector(".items-center");
         const pageCookies = await page.cookies()
         const cookies: any = pageCookies.reduce(
             (map, cookie) => ({ ...map, [cookie.name]: cookie }),
@@ -87,6 +92,9 @@ export async function getOpenAIAuthInfo({
             sessionToken: cookies['__Secure-next-auth.session-token']?.value,
             // cookies
         }
+        console.log(authInfo);
+        lastUpdate = Date.now();
+        auth = authInfo;
         return authInfo
     } catch (err) {
         bot.logger.error(err);

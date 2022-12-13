@@ -11,6 +11,8 @@ bot.logger.addStream({ level: bot.logger.INFO, stream: process.stdout });
 bot.logger.info("Initialization: kook-chatGPT initialization start");
 bot.addCommands(chat, reset, setp, chatp);
 
+conv.run("refresh");
+
 bot.connect();
 
 bot.logger.debug('system init success');
