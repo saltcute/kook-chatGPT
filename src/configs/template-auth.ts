@@ -9,6 +9,7 @@ export default {
     cfClearance: '',
     userAgent: '',
     autoLogin: false,
+    loginMethod: "Microsoft", // Can be "OpenAI", "Google" and "Microsoft"
     openAIEmail: '',
     openAIPassword: ''
 };

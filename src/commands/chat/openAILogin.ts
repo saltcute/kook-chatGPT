@@ -1,3 +1,4 @@
+import auth from 'configs/auth'
 import delay from 'delay'
 import { bot } from 'init/client'
 import {
@@ -18,7 +19,7 @@ export type OpenAIAuthInfo = {
     cookies?: Record<string, Protocol.Network.Cookie>
 }
 
-var auth: OpenAIAuthInfo;
+var authSave: OpenAIAuthInfo;
 var lastUpdate: number = -1;
 /**
  * Bypasses OpenAI's use of Cloudflare to get the cookies required to use
@@ -38,8 +39,8 @@ export async function getOpenAIAuthInfo({
     let page: Page
     let origBrowser = browser
 
-    if (auth && (Date.now() - lastUpdate < 60 * 60 * 1000)) {
-        return auth;
+    if (authSave && (Date.now() - lastUpdate < 60 * 60 * 1000)) {
+        return authSave;
     }
     try {
         if (!browser) {
@@ -54,31 +55,68 @@ export async function getOpenAIAuthInfo({
         await page.waitForSelector('#__next .btn-primary', { timeout })
         await delay(1000)
 
-        try {
-            if (email && password) {
-                await Promise.all([
-                    page.click('#__next .btn-primary'),
-                    page.waitForNavigation({
-                        waitUntil: 'networkidle0'
-                    })
-                ])
-                await page.waitForSelector('button[data-provider="google"]', { timeout });
-                await page.click('button[data-provider="google"]');
-                await page.waitForNavigation({
-                    waitUntil: 'networkidle0'
-                })
-                await page.type('input[type="email"]', email, { delay: 50 })
-                await page.keyboard.press("Enter");
-                await delay(3000);
-                await page.keyboard.type(password, { delay: 50 });
-                await page.keyboard.press("Enter");
-            }
-        } catch (err) {
-            await browser.close();
-            throw err;
-            // console.log("Probably logged in for google")
-            // await page.click(`div[data-email="${email}"]`)
+        switch (auth.loginMethod) {
+            case "Google":
+                try {
+                    if (email && password) {
+                        await Promise.all([
+                            page.click('#__next .btn-primary'),
+                            page.waitForNavigation({
+                                waitUntil: 'networkidle0'
+                            })
+                        ])
+                        await page.waitForSelector('button[data-provider="google"]', { timeout });
+                        await page.click('button[data-provider="google"]');
+                        await page.waitForNavigation({
+                            waitUntil: 'networkidle0'
+                        })
+                        await page.type('input[type="email"]', email, { delay: 50 })
+                        await page.keyboard.press("Enter");
+                        await delay(3000);
+                        await page.keyboard.type(password, { delay: 50 });
+                        await page.keyboard.press("Enter");
+                    }
+                } catch (err) {
+                    await browser.close();
+                    throw err;
+                    // console.log("Probably logged in for google")
+                    // await page.click(`div[data-email="${email}"]`)
+                }
+                break;
+            case "Microsoft":
+                try {
+                    if (email && password) {
+                        await Promise.all([
+                            page.click('#__next .btn-primary'),
+                            page.waitForNavigation({
+                                waitUntil: 'networkidle0'
+                            })
+                        ])
+                        await page.waitForSelector('button[data-provider="windowslive"]', { timeout });
+                        await page.click('button[data-provider="windowslive"]');
+                        await page.waitForNavigation({
+                            waitUntil: 'networkidle0'
+                        })
+                        await page.type('input[type="email"]', email, { delay: 50 })
+                        await page.keyboard.press("Enter");
+                        await delay(3000);
+                        await page.keyboard.type(password, { delay: 50 });
+                        await page.keyboard.press("Enter");
+                        await delay(3000);
+                        await page.keyboard.press("Enter");
+                    }
+                } catch (err) {
+                    await browser.close();
+                    throw err;
+                    // console.log("Probably logged in for google")
+                    // await page.click(`div[data-email="${email}"]`)
+                }
+                break;
+            case "OpenAI":
+            default:
+                throw "Unsupported!";
         }
+
         await page.waitForSelector(".items-center");
         const pageCookies = await page.cookies()
         const cookies: any = pageCookies.reduce(
@@ -94,7 +132,7 @@ export async function getOpenAIAuthInfo({
         }
         console.log(authInfo);
         lastUpdate = Date.now();
-        auth = authInfo;
+        authSave = authInfo;
 
         await browser.close();
         return authInfo
