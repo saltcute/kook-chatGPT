@@ -1,5 +1,6 @@
 import { chatp } from 'commands/chat/chatp.app';
 import * as conv from 'commands/chat/conversation';
+import { reauth } from 'commands/chat/reauth.app';
 import { reset } from 'commands/chat/reset.app';
 import { setp } from 'commands/chat/setp.app';
 import { bot } from 'init/client';
@@ -9,7 +10,7 @@ bot.logger.fields.name = "kook-chatGPT";
 bot.logger.addStream({ level: bot.logger.INFO, stream: process.stdout });
 // bot.logger.addStream({ level: bot.logger.DEBUG, stream: process.stdout }); // DEBUG
 bot.logger.info("Initialization: kook-chatGPT initialization start");
-bot.addCommands(chat, reset, setp, chatp);
+bot.addCommands(chat, reset, setp, chatp, reauth);
 
 conv.run("refresh");
 

@@ -10,7 +10,7 @@ class Chat extends AppCommand {
     func: AppFunc<BaseSession> = async (session) => {
         bot.logger.info(`Invoked .chat ${session.args.join(" ")}`);
         if (session.args.length == 0) {
-            return session.reply("No input");
+            return session.reply("No input.");
         } else {
             await conv.run("run", session, false).catch((err) => {
                 session.replyCard(new Card().setSize("lg").setTheme("danger")

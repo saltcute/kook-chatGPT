@@ -1,7 +1,7 @@
 import auth from "configs/auth";
 import { bot } from "init/client";
 import { BaseSession, Card } from "kbotify";
-import { getOpenAIAuthInfo } from "./openAILogin";
+import { getOpenAIAuthInfo, needLogin, reauth } from "./openAILogin";
 
 var prefix: {
     [user: string]: string
@@ -22,15 +22,21 @@ type openAIAuthInfo = {
 
 
 
-export async function run(action: "get" | "reset" | "run" | "refresh" | "addPrefix", ...args: any): Promise<any> {
+export async function run(action: "get" | "reset" | "run" | "refresh" | "addPrefix" | "reauth", ...args: any): Promise<any> {
     const chatGPTAPI = await import("chatgpt");
     var openAIAuth: openAIAuthInfo = {
         sessionToken: auth.sessionToken,
         clearanceToken: auth.cfClearance,
         userAgent: auth.userAgent
     }
+    var authMessageId: string;
     if (auth.autoLogin) {
         try {
+            if ((action == "run" || action == "reset") && needLogin()) {
+                const session: BaseSession = action == "reset" ? args[2] : args[0];
+                const initalCard = new Card().setSize("sm").setTheme("warning").addText("Getting authorized...Please wait.");
+                authMessageId = <string>((await session.replyCard(initalCard)).msgSent?.msgId);
+            }
             openAIAuth = await getOpenAIAuthInfo({
                 email: auth.openAIEmail,
                 password: auth.openAIPassword
@@ -95,7 +101,12 @@ export async function run(action: "get" | "reset" | "run" | "refresh" | "addPref
                 .addText(str);
         }
         const initalCard = new Card().setSize("sm").setTheme("warning").addText("Waiting for response...");
-        const messageId = <string>((await session.replyCard(initalCard)).msgSent?.msgId);
+        var messageId = "";
+        if (authMessageId) {
+            await session.updateMessage(authMessageId, initalCard.toString());
+        } else {
+            messageId = <string>((await session.replyCard(initalCard)).msgSent?.msgId);
+        }
 
         var lastUpdate = 0;
         await chatgpt.ensureAuth();
@@ -142,5 +153,7 @@ export async function run(action: "get" | "reset" | "run" | "refresh" | "addPref
             return addPrefix(args[0], args[1]);
         case "run":
             return run(args[0], args[1]);
+        case "reauth":
+            return reauth();
     }
 }

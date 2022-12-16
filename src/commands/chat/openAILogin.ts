@@ -21,6 +21,21 @@ export type OpenAIAuthInfo = {
 
 var authSave: OpenAIAuthInfo;
 var lastUpdate: number = -1;
+var browser: Browser;
+
+
+export async function reauth() {
+    lastUpdate = -1;
+    await getOpenAIAuthInfo({
+        email: auth.openAIEmail,
+        password: auth.openAIPassword
+    })
+}
+
+export function needLogin() {
+    return !(authSave && (Date.now() - lastUpdate < 60 * 60 * 1000));
+}
+
 /**
  * Bypasses OpenAI's use of Cloudflare to get the cookies required to use
  * ChatGPT. Uses Puppeteer with a stealth plugin under the hood.
@@ -29,17 +44,15 @@ export async function getOpenAIAuthInfo({
     email,
     password,
     timeout = 2 * 60 * 1000,
-    browser
 }: {
     email: string
     password: string
     timeout?: number
-    browser?: Browser
 }): Promise<OpenAIAuthInfo> {
     let page: Page
     let origBrowser = browser
 
-    if (authSave && (Date.now() - lastUpdate < 60 * 60 * 1000)) {
+    if (!needLogin()) {
         return authSave;
     }
     try {
@@ -52,6 +65,17 @@ export async function getOpenAIAuthInfo({
         page.setDefaultTimeout(timeout)
 
         await page.goto('https://chat.openai.com/auth/login')
+        var loop = true, reload = false;
+        while (loop) {
+            await delay(2000);
+            await page.waitForSelector('a[href="https://share.hsforms.com/13gyIEVN5SrScw-iVvCgIew4sk30"]', { timeout: 2000 })
+                .then(() => { reload = true; })
+                .catch(() => { loop = false; });
+            if (reload) {
+                await page.reload();
+                reload = false;
+            }
+        }
         await page.waitForSelector('#__next .btn-primary', { timeout })
         await delay(1000)
 
@@ -70,7 +94,12 @@ export async function getOpenAIAuthInfo({
                         await page.waitForNavigation({
                             waitUntil: 'networkidle0'
                         })
+                        await delay(3000);
                         await page.type('input[type="email"]', email, { delay: 50 })
+                            .catch(() => {
+                                skipEmail = true;
+                                bot.logger.info("Google session exist")
+                            });
                         await page.keyboard.press("Enter");
                         await delay(3000);
                         await page.keyboard.type(password, { delay: 50 });
@@ -97,13 +126,23 @@ export async function getOpenAIAuthInfo({
                         await page.waitForNavigation({
                             waitUntil: 'networkidle0'
                         })
-                        await page.type('input[type="email"]', email, { delay: 50 })
-                        await page.keyboard.press("Enter");
+                        var skipEmail = false;
+                        await page.waitForSelector('input[type="email"]', { timeout: 3000 })
+                            .catch(() => {
+                                skipEmail = true;
+                                bot.logger.info("Microsoft session exist")
+                            });
+                        if (!skipEmail) {
+                            await page.type('input[type="email"]', email, { delay: 50 });
+                            await page.keyboard.press("Enter");
+                        }
                         await delay(3000);
                         await page.keyboard.type(password, { delay: 50 });
                         await page.keyboard.press("Enter");
-                        await delay(3000);
-                        await page.keyboard.press("Enter");
+                        if (!skipEmail) {
+                            await delay(3000);
+                            await page.keyboard.press("Enter");
+                        }
                     }
                 } catch (err) {
                     await browser.close();
@@ -117,7 +156,9 @@ export async function getOpenAIAuthInfo({
                 throw "Unsupported!";
         }
 
-        await page.waitForSelector(".items-center");
+        await page.waitForNavigation({
+            waitUntil: 'networkidle0'
+        })
         const pageCookies = await page.cookies()
         const cookies: any = pageCookies.reduce(
             (map, cookie) => ({ ...map, [cookie.name]: cookie }),
@@ -130,11 +171,11 @@ export async function getOpenAIAuthInfo({
             sessionToken: cookies['__Secure-next-auth.session-token']?.value,
             // cookies
         }
-        console.log(authInfo);
+        // console.log(authInfo);
         lastUpdate = Date.now();
         authSave = authInfo;
-
-        await browser.close();
+        bot.logger.info("Login success");
+        // await browser.close();
         return authInfo
     } catch (err) {
         bot.logger.error(err);
