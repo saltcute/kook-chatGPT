@@ -8,11 +8,11 @@ class Chat extends AppCommand {
     help = '`.echo kmd 内容`'; // 帮助文字
     intro = '复读你所说的文字, 并用kmarkdown格式返回。';
     func: AppFunc<BaseSession> = async (session) => {
-        bot.logger.info(`Invoked .chat ${session.args.join(" ")}`);
+        bot.logger.info(`Invoked .${this.trigger} ${session.args.join(" ")}`);
         if (session.args.length == 0) {
             return session.reply("No input.");
         } else {
-            await conv.run("run", session, false).catch((err) => {
+            await conv.run(session, false).catch((err) => {
                 session.replyCard(new Card().setSize("lg").setTheme("danger")
                     .addTitle("Internal Error | 内部错误")
                     .addDivider()

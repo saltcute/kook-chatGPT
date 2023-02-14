@@ -8,8 +8,8 @@ class ChatWithPrefix extends AppCommand {
     help = '`.echo kmd 内容`'; // 帮助文字
     intro = '复读你所说的文字, 并用kmarkdown格式返回。';
     func: AppFunc<BaseSession> = async (session) => {
-        bot.logger.info(`Invoked .chatp ${session.args.join(" ")}`);
-        await conv.run("run", session, true).catch((err) => {
+        bot.logger.info(`Invoked .${this.trigger} ${session.args.join(" ")}`);
+        await conv.run(session, true).catch((err) => {
             session.replyCard(new Card().setSize("lg").setTheme("danger")
                 .addTitle("Internal Error | 内部错误")
                 .addDivider()
