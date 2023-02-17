@@ -95,7 +95,8 @@ export async function run(session: BaseSession, prefix: boolean): Promise<void> 
     getConversation(session.channel.id, session.user.id).then(async (res) => {
         chatgpt.sendMessage(session.args.join(" "), {
             promptPrefix: prefix ? (await getPrefix(session.user.id)) : undefined,
-            conversationId: res?.id || undefined,
+            conversationId: res?.coversationId || undefined,
+            parentMessageId: res?.id || undefined,
             stream: true,
             onProgress: (res: any) => {
                 if (Math.trunc(Date.now() / 400) != lastUpdate) {
