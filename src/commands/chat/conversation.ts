@@ -11,7 +11,7 @@ let chatgpt: any;
 (async () => {
     chatgpt = await _chatgpt.then((res) => {
         return new res.ChatGPTAPI({
-            apiKey: auth.openAIKey
+            apiKey: auth.openAIKey,
         })
     })
 })()
@@ -25,13 +25,6 @@ var conversations: {
         [user: string]: ChatMessage | undefined
     }
 } = {};
-
-type openAIAuthInfo = {
-    userAgent: string
-    clearanceToken: string
-    sessionToken: string
-}
-
 
 export async function getConversation(channel: string, user: string): Promise<ChatMessage | undefined> {
     if (!conversations[channel] || !conversations[channel][user]) {
