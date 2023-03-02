@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/Hexona69/kook-chatGPT#readme",
   "dependencies": {
-    "chatgpt": "^4.4.0",
+    "chatgpt": "^5.0.4",
     "delay": "^5.0.0",
     "kbotify": "^0.2.5",
     "ts-node": "^10.9.1",
