@@ -4,8 +4,8 @@
   "description": "Chat with chatGPT",
   "main": "src/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --nolazy -r ts-node/register -r tsconfig-paths/register src/index.ts"
+    "start": "node --nolazy -r ts-node/register -r tsconfig-paths/register src/index.ts",
+    "pm2": "pm2 start src/pm2-windows.js --name='kook-pixiv-chan'"
   },
   "repository": {
     "type": "git",
