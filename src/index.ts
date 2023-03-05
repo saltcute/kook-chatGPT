@@ -9,7 +9,7 @@ bot.logger.fields.name = "kook-chatGPT";
 bot.logger.addStream({ level: bot.logger.INFO, stream: process.stdout });
 // bot.logger.addStream({ level: bot.logger.DEBUG, stream: process.stdout }); // DEBUG
 bot.logger.info("Initialization: kook-chatGPT initialization start");
-bot.addCommands(chat, reset, setp, chatp);
+bot.plugin.load(chat, reset, setp, chatp);
 
 bot.connect();
 

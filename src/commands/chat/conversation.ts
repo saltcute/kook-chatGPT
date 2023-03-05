@@ -1,6 +1,6 @@
 import auth from "configs/auth";
 import { bot } from "init/client";
-import { BaseSession, Card } from "kbotify";
+import { BaseSession, Card } from 'kasumi.js';
 // import { ChatGPTAPI, e } from "chatgpt";
 const _chatgpt = import('chatgpt');
 
@@ -56,7 +56,7 @@ export async function run(session: BaseSession, prefix: boolean): Promise<void> 
                     "elements": [
                         {
                             "type": "image",
-                            "src": session.user.avatar
+                            "src": session.author.avatar
                         },
                         {
                             "type": "plain-text",
@@ -82,12 +82,13 @@ export async function run(session: BaseSession, prefix: boolean): Promise<void> 
             .addText(str);
     }
     const initalCard = new Card().setSize("sm").setTheme("warning").addText("Waiting for response...");
-    let messageId = (await session.sendCard(initalCard)).msgSent?.msgId || '';
+    let message = await session.send(initalCard);
+    let messageId = message ? message.msg_id : '';
 
     var lastUpdate = 0;
-    getConversation(session.channel.id, session.user.id).then(async (res) => {
+    getConversation(session.channelId, session.authorId).then(async (res) => {
         chatgpt.sendMessage(session.args.join(" "), {
-            promptPrefix: prefix ? (await getPrefix(session.user.id)) : undefined,
+            promptPrefix: prefix ? (await getPrefix(session.authorId)) : undefined,
             conversationId: res?.coversationId || undefined,
             parentMessageId: res?.id || undefined,
             stream: true,
@@ -104,9 +105,9 @@ export async function run(session: BaseSession, prefix: boolean): Promise<void> 
         }).then((res: any) => {
             bot.logger.info("Done");
             setTimeout(() => { bot.API.message.update(messageId, getCard(res.text, false).toString()); }, 1000);
-            setConversation(session.channel.id, session.userId, res);
+            setConversation(session.channelId, session.authorId, res);
         }).catch((err: any) => {
-            session.replyCard(new Card().setSize("lg").setTheme("danger")
+            session.reply(new Card().setSize("lg").setTheme("danger")
                 .addTitle("Internal Error | 内部错误")
                 .addDivider()
                 .addText(`错误信息：\n\`\`\`\n${err}\n\`\`\``)

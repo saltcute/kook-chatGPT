@@ -1,16 +1,14 @@
 import auth from 'configs/auth';
 import { bot } from 'init/client';
-import { AppCommand, AppFunc, BaseSession, Card } from 'kbotify';
+import { BaseCommand, CommandFunction, BaseSession, Card } from 'kasumi.js';
 import * as conv from './conversation';
 
-class Reset extends AppCommand {
-    code = 'reset'; // 只是用作标记
-    trigger = 'reset'; // 用于触发的文字
-    help = '`.echo kmd 内容`'; // 帮助文字
-    intro = '复读你所说的文字, 并用kmarkdown格式返回。';
-    func: AppFunc<BaseSession> = async (session) => {
-        bot.logger.info(`Invoked .${this.trigger} ${session.args.join(" ")}`);
-        await conv.resetConversation(session.channel.id, session.user.id);
+class Reset extends BaseCommand {
+    name = 'reset';
+    description = '重置对话';
+    func: CommandFunction<BaseSession, any> = async (session) => {
+        bot.logger.info(`Invoked .${this.name} ${session.args.join(" ")}`);
+        await conv.resetConversation(session.channelId, session.authorId);
         return session.reply("Conversation reset.");
     };
 }
