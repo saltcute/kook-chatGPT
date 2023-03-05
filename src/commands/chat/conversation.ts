@@ -94,7 +94,7 @@ export async function run(session: BaseSession, prefix: boolean): Promise<void> 
             stream: true,
             onProgress: (res: any) => {
                 if (Math.trunc(Date.now() / 400) != lastUpdate) {
-                    bot.API.message.update(messageId, getCard(res.text, true).toString()).catch((err) => {
+                    bot.API.message.update(messageId, getCard(res.text, true)).catch((err) => {
                         console.log(getCard(res.text, true).toString());
                         bot.logger.error(err);
                     });
