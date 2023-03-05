@@ -25,7 +25,7 @@
   "dependencies": {
     "chatgpt": "^5.0.4",
     "delay": "^5.0.0",
-    "kasumi.js": "^0.1.10",
+    "kasumi.js": "^0.1.11",
     "kbotify": "^0.2.5",
     "ts-node": "^10.9.1",
     "ts-register": "^0.1.0"
