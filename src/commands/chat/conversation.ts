@@ -87,8 +87,8 @@ export async function run(session: BaseSession, prefix: boolean): Promise<void> 
 
     var lastUpdate = 0;
     getConversation(session.channelId, session.authorId).then(async (res) => {
-        chatgpt.sendMessage(session.args.join(" "), {
-            promptPrefix: prefix ? (await getPrefix(session.authorId)) : undefined,
+        chatgpt.sendMessage(prefix ? (await getPrefix(session.authorId)) : "" + " " + session.args.join(" "), {
+            // promptPrefix: prefix ? (await getPrefix(session.authorId)) : undefined,
             conversationId: res?.coversationId || undefined,
             parentMessageId: res?.id || undefined,
             stream: true,
