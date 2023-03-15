@@ -71,11 +71,11 @@ export async function run(session: BaseSession, prefix: boolean): Promise<void> 
                     "elements": [
                         {
                             "type": "image",
-                            "src": "https://img.kaiheila.cn/assets/2022-12/g6BYoMU88i0f60f4.png"
+                            "src": bot.me.avatar
                         },
                         {
                             "type": "plain-text",
-                            "content": `${finished ? `Chat is typing${(Math.trunc(Date.now() / 1000)) % 3 == 0 ? "." : ((Math.trunc(Date.now() / 1000)) % 3 == 1 ? ".." : "...")}` : `Chat`}`
+                            "content": `${finished ? `${bot.me.username} 正在输入${(Math.trunc(Date.now() / 1000)) % 3 == 0 ? "." : ((Math.trunc(Date.now() / 1000)) % 3 == 1 ? ".." : "...")}` : `${bot.me.username} 说`}`
                         }
                     ]
                 })
