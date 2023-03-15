@@ -1,17 +1,15 @@
 import axios from 'axios';
-import { chatp } from 'commands/chat/chatp.app';
-import * as conv from 'commands/chat/conversation';
-import { reset } from 'commands/chat/reset.app';
-import { setp } from 'commands/chat/setp.app';
+import { glm } from 'commands/chatglm/glm';
+import { chat } from 'commands/chatgpt/chat.app';
+import { chatp } from 'commands/chatgpt/chatp.app';
+import { gpt } from 'commands/chatgpt/gpt';
+import { reset } from 'commands/chatgpt/reset.app';
+import { setp } from 'commands/chatgpt/setp.app';
 import auth from 'configs/auth';
 import { bot } from 'init/client';
-import { chat } from './commands/chat/chat.app';
 
-bot.logger.fields.name = "kook-chatGPT";
-bot.logger.addStream({ level: bot.logger.INFO, stream: process.stdout });
-// bot.logger.addStream({ level: bot.logger.DEBUG, stream: process.stdout }); // DEBUG
 bot.logger.info("Initialization: kook-chatGPT initialization start");
-bot.plugin.load(chat, reset, setp, chatp);
+bot.plugin.load(gpt, glm, chat, chatp, reset, setp);
 
 bot.connect();
 
