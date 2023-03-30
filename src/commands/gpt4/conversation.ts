@@ -1,12 +1,11 @@
 import auth from "configs/auth";
 import { bot } from "init/client";
 import { BaseSession, Card } from 'kasumi.js';
-import { ChatGPTAPI, ChatMessage } from "chatgpt";
+// import { ChatGPTAPI, ChatMessage } from "chatgpt";
+type ChatMessage = any; type ChatGPTAPI = any;
+
 const _chatgpt = import('chatgpt');
 
-// type ChatMessage = any;
-
-// let chatgpt: any;
 let chatgpt: ChatGPTAPI;
 
 (async () => {
