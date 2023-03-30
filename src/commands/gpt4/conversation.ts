@@ -1,17 +1,22 @@
 import auth from "configs/auth";
 import { bot } from "init/client";
 import { BaseSession, Card } from 'kasumi.js';
-// import { ChatGPTAPI, e } from "chatgpt";
+import { ChatGPTAPI, ChatMessage } from "chatgpt";
 const _chatgpt = import('chatgpt');
 
-type ChatMessage = any;
+// type ChatMessage = any;
 
-let chatgpt: any;
+// let chatgpt: any;
+let chatgpt: ChatGPTAPI;
 
 (async () => {
     chatgpt = await _chatgpt.then((res) => {
         return new res.ChatGPTAPI({
             apiKey: auth.openAIKey,
+            completionParams: {
+                model: 'gpt-4'
+            },
+            maxModelTokens: 8100
         })
     })
 })()
@@ -88,7 +93,7 @@ export async function run(session: BaseSession, prefix: boolean): Promise<void> 
     var lastUpdate = 0;
     getConversation(session.channelId, session.authorId).then(async (res) => {
         chatgpt.sendMessage(prefix ? (await getPrefix(session.authorId)) : "" + " " + session.args.join(" "), {
-            parentMessageId: res?.id || undefined,
+            // parentMessageId: res?.id || undefined,
             stream: true,
             onProgress: (res: any) => {
                 if (Math.trunc(Date.now() / 1000) != lastUpdate) {
