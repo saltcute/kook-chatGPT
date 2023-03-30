@@ -4,9 +4,9 @@ import { chatp } from "./chatp.app";
 import { reset } from "./reset.app";
 import { setp } from "./setp.app";
 
-class GPT extends BaseMenu {
+class GPT4 extends BaseMenu {
     name = 'gpt4';
     prefix = './!';
 }
 
-export const gpt = new GPT(chat, chatp, reset, setp)
+export const gpt4 = new GPT4(chat, chatp, reset, setp)

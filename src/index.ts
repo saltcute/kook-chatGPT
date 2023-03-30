@@ -5,11 +5,12 @@ import { chatp } from 'commands/chatgpt/chatp.app';
 import { gpt } from 'commands/chatgpt/gpt';
 import { reset } from 'commands/chatgpt/reset.app';
 import { setp } from 'commands/chatgpt/setp.app';
+import { gpt4 } from 'commands/gpt4/gpt';
 import auth from 'configs/auth';
 import { bot } from 'init/client';
 
 bot.logger.info("Initialization: kook-chatGPT initialization start");
-bot.plugin.load(gpt, glm, chat, chatp, reset, setp);
+bot.plugin.load(gpt, glm, gpt4, chat, chatp, reset, setp);
 
 bot.connect();
 
