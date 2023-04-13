@@ -6,7 +6,7 @@ class ChatWithPrefix extends BaseCommand {
     name = 'chatp';
     description = '与 ChatGPT 聊天，并带上前缀';
     func: CommandFunction<BaseSession, any> = async (session) => {
-        if(session.authorId != "1854484583") return session.reply("暂未开放使用");
+        // if(session.authorId != "1854484583") return session.reply("暂未开放使用");
         bot.logger.info(`Invoked .${this.name} ${session.args.join(" ")}`);
         await conv.run(session, true).catch((err) => {
             session.reply(new Card().setSize("lg").setTheme("danger")
