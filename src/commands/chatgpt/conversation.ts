@@ -2,18 +2,19 @@ import auth from "configs/auth";
 import { bot } from "init/client";
 import { BaseSession, Card } from 'kasumi.js';
 // import { ChatGPTAPI, e } from "chatgpt";
+// import { ChatMessage } from "chatgpt";
 const _chatgpt = import('chatgpt');
 
 type ChatMessage = any;
 
-let chatgpt: any;
+let chatgpt: InstanceType<Awaited<typeof _chatgpt>['ChatGPTAPI']>
 
 (async () => {
     chatgpt = await _chatgpt.then((res) => {
         return new res.ChatGPTAPI({
             apiKey: auth.openAIKey,
         })
-    })
+    }) as any;
 })()
 
 var prefix: {
@@ -75,7 +76,7 @@ export async function run(session: BaseSession, prefix: boolean): Promise<void> 
                         },
                         {
                             "type": "plain-text",
-                            "content": `${finished ? `${bot.me.username} 正在输入${(Math.trunc(Date.now() / 1000)) % 3 == 0 ? "." : ((Math.trunc(Date.now() / 1000)) % 3 == 1 ? ".." : "...")}` : `${bot.me.username} 说`}`
+                            "content": `${finished ? `${bot.me.username} 正在输入${(Math.trunc(Date.now() / 1000)) % 3 == 0 ? "." : ((Math.trunc(Date.now() / 1000)) % 3 == 1 ? ".." : "...")}` : `${bot.me.username} 说 (对话历史已被暂时停用)`}`
                         }
                     ]
                 })
@@ -88,7 +89,7 @@ export async function run(session: BaseSession, prefix: boolean): Promise<void> 
     var lastUpdate = 0;
     getConversation(session.channelId, session.authorId).then(async (res) => {
         chatgpt.sendMessage(prefix ? (await getPrefix(session.authorId)) : "" + " " + session.args.join(" "), {
-            parentMessageId: res?.id || undefined,
+            // parentMessageId: res?.id || undefined,
             stream: true,
             onProgress: (res: any) => {
                 if (Math.trunc(Date.now() / 1000) != lastUpdate) {
