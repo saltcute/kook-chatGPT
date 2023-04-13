@@ -5,6 +5,7 @@ export default {
     khltoken: 'token',
     khlverify: '',
     openAIKey: 'OpenAI API Key',
+    gpt4Key: '',
 
     /** 
      * 懒的写判断了

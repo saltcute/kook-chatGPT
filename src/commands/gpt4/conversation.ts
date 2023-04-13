@@ -1,6 +1,7 @@
 import auth from "configs/auth";
 import { bot } from "init/client";
 import { BaseSession, Card } from 'kasumi.js';
+
 // import { ChatGPTAPI, ChatMessage } from "chatgpt";
 type ChatMessage = any; type ChatGPTAPI = any;
 
@@ -11,7 +12,7 @@ let chatgpt: ChatGPTAPI;
 (async () => {
     chatgpt = await _chatgpt.then((res) => {
         return new res.ChatGPTAPI({
-            apiKey: auth.openAIKey,
+            apiKey: auth.gpt4key || auth.openAIKey,
             completionParams: {
                 model: 'gpt-4'
             },
