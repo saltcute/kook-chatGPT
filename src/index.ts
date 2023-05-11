@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { glm } from 'commands/chatglm/glm';
+import { glm } from 'commands/chatglm-6b/glm';
 import { chat } from 'commands/chatgpt/chat.app';
 import { chatp } from 'commands/chatgpt/chatp.app';
 import { gpt } from 'commands/chatgpt/gpt';

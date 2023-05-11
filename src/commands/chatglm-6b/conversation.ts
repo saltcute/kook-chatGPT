@@ -72,7 +72,6 @@ export async function run(session: BaseSession, prefix: boolean): Promise<void> 
     const initalCard = new Card().setSize("sm").setTheme("warning").addText("Waiting for response...");
     const { err, data: message } = await session.send(initalCard);
     if (err) throw err;
-    let messageId = message.msg_id;
 
     let job = (await axios({
         url: `https://api.runpod.ai/v1/${auth.runpodAPIEndpoint}/run`,
@@ -90,8 +89,6 @@ export async function run(session: BaseSession, prefix: boolean): Promise<void> 
         id: string,
         status: string
     }
-
-    console.log(job);
 
     let status, content = '';
     while (status = (await axios({
@@ -122,7 +119,7 @@ export async function run(session: BaseSession, prefix: boolean): Promise<void> 
         await delay(1000);
     }
 
-    bot.API.message.update(messageId, getCard(content, true));
+    bot.API.message.update(message.msg_id, getCard(content, true));
 }
 export async function addPrefix(user: string, str: string) {
     prefix[user] = str;

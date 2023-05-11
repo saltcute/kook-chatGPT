@@ -83,8 +83,9 @@ export async function run(session: BaseSession, prefix: boolean): Promise<void> 
             .addText(str);
     }
     const initalCard = new Card().setSize("sm").setTheme("warning").addText("Waiting for response...");
-    let message = await session.send(initalCard);
-    let messageId = message ? message.msg_id : '';
+    const { err, data: message } = await session.send(initalCard);
+    if (err) throw err;
+    let messageId = message.msg_id;
 
     var lastUpdate = 0;
     getConversation(session.channelId, session.authorId).then(async (res) => {
