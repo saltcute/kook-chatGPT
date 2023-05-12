@@ -1,12 +1,13 @@
 import { bot } from 'init/client';
 import { BaseCommand, CommandFunction, BaseSession, Card } from 'kasumi.js';
 import * as conv from './conversation';
+import { isAdmin } from 'commands/lib';
 
 class Chat extends BaseCommand {
     name = 'chat';
     description = '与 ChatGPT 聊天';
     func: CommandFunction<BaseSession, any> = async (session) => {
-        if (session.authorId != "1854484583") return session.reply("暂未开放使用");
+        if (!isAdmin(session.authorId)) return session.reply("暂未开放使用");
         bot.logger.info(`Invoked .${this.name} ${session.args.join(" ")}`);
         if (session.args.length == 0) {
             return session.reply("No input.");

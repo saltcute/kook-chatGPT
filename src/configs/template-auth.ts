@@ -17,5 +17,7 @@ export default {
     runpodAPIKey: '',
 
     useBotMarket: false,
-    botMarketUUID: ''
+    botMarketUUID: '',
+
+    adminList: []
 };
